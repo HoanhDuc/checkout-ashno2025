@@ -1,0 +1,65 @@
+{
+  "registration": {
+    "title": "Registration",
+    "subtitle": "Please fill in all the information below",
+    "categories": {
+      "title": "Registration Category",
+      "ent": "ENT Doctors",
+      "student": "Student & Trainer",
+      "other": "Other"
+    },
+    "doctorate": {
+      "title": "Doctorate Degree",
+      "prof": "Prof. M.D, Ph.D",
+      "md": "M.D.",
+      "phd": "Ph.D",
+      "other": "Other"
+    },
+    "form": {
+      "nationality": "Nationality",
+      "firstName": "First Name",
+      "middleName": "Middle Name",
+      "lastName": "Last Name",
+      "dob": "Date of Birth",
+      "institution": "Institution (Work Place)",
+      "email": "Email",
+      "phone": "Phone Number",
+      "sponsor": {
+        "title": "Sponsor by",
+        "subtitle": "If any company sponsors for registration",
+        "placeholder": "Sponsor Company Name"
+      },
+      "submit": "Continue",
+      "processing": "Processing..."
+    },
+    "validation": {
+      "category": "Please select a registration category",
+      "doctorate": "Please select your doctorate degree",
+      "firstName": "First name should be 2-50 characters and contain only letters",
+      "lastName": "Last name should be 2-50 characters and contain only letters",
+      "dob": "Please select your date of birth",
+      "institution": "Please enter your institution",
+      "email": "Please enter a valid email address",
+      "phone": "Please enter a valid phone number (10-15 digits)"
+    }
+  },
+  "fees": {
+    "title": "Registration Fees",
+    "early": {
+      "title": "Early Bird",
+      "subtitle": "Before August 31st"
+    },
+    "standard": {
+      "title": "Standard Registration",
+      "subtitle": "Sept 1st to Oct 31st"
+    },
+    "onsite": {
+      "title": "On-site Registration",
+      "subtitle": "Nov 1st to Nov 2nd"
+    },
+    "delegate": "Delegate",
+    "accommodation": "Accommodation",
+    "gala": "Gala Dinner",
+    "note": "Prices include VAT and other fees"
+  }
+}

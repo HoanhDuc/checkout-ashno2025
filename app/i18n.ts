@@ -1,0 +1,212 @@
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+
+// Import translations
+const enTranslations = {
+    registration: {
+        title: "Registration Form",
+        subtitle: "Please fill in all required fields",
+        categories: {
+            title: "Registration Category",
+            ent: "ENT Doctors",
+            student: "Student & Trainees",
+            chairman: "Chairman & Speaker"
+        },
+        doctorate: {
+            title: "Doctorate Degree",
+            prof_md_phd: "Prof. M.D, Ph.D",
+            aprof_md_phd: "A/Prof. M.D, Ph.D",
+            dr_md_phd: "Dr. M.D, Ph.D",
+            dr_md: "Dr. M.D",
+            dr: "Dr.",
+            prof: "Professor",
+            md: "Medical Doctor",
+            phd: "PhD",
+            other: "Other"
+        },
+        form: {
+            nationality: "Nationality",
+            firstName: "First Name",
+            middleName: "Middle Name",
+            lastName: "Last Name",
+            dob: "Date of Birth",
+            institution: "Institution",
+            email: "Email",
+            phone: "Phone Number",
+            sponsor: {
+                title: "Sponsor",
+                subtitle: "If you have a sponsor, please enter their name",
+                placeholder: "Enter sponsor name"
+            },
+            submit: "Submit Registration",
+            processing: "Processing...",
+            success: "Registration successful! Redirecting to payment...",
+            error: "Registration failed. Please try again.",
+            required: "Required field"
+        },
+        validation: {
+            category: "Please select a registration category",
+            doctorate: "Please select your doctorate degree",
+            firstName: "First name must be 2-50 letters",
+            lastName: "Last name must be 2-50 letters",
+            dob: "Please select your date of birth",
+            institution: "Please enter your institution",
+            email: "Please enter a valid email address",
+            phone: "Please enter a valid phone number",
+            nationality: "Please enter your nationality",
+            middleName: "Please enter your middle name"
+        },
+        checkout: {
+            title: "Registration Information",
+            subtitle: "Complete registration details",
+            registrationId: "Registration ID",
+            paymentStatus: "Payment Status",
+            paymentSuccess: "Payment Successful",
+            paymentFailed: "Payment Failed",
+            noInfo: "No registration information found",
+            loading: "Loading registration information...",
+            error: "Failed to load registration information"
+        }
+    },
+    fees: {
+        title: "Registration Fee",
+        early: {
+            title: "Early Bird",
+            subtitle: "Until March 31, 2025"
+        },
+        standard: {
+            title: "Standard",
+            subtitle: "April 1 - May 31, 2025"
+        },
+        onsite: {
+            title: "On-site",
+            subtitle: "After June 1, 2025"
+        },
+        delegate: "Doctor",
+        accommodation: "Student & Trainer",
+        gala: "Gala Dinner",
+        note: "All fees are in Vietnamese Dong (VND)",
+        usd: "Fee (USD)",
+        vnd: "Fee (VND)",
+        status: {
+            success: "Success",
+            failed: "Failed"
+        }
+    }
+};
+
+const viTranslations = {
+    registration: {
+        title: "Đăng Ký Tham Dự",
+        subtitle: "Vui lòng điền đầy đủ thông tin bắt buộc",
+        categories: {
+            title: "Loại Đăng Ký",
+            ent: "Bác sĩ Tai Mũi Họng",
+            student: "Sinh viên & Học viên",
+            chairman: "Chủ tịch & Giảng viên"
+        },
+        doctorate: {
+            title: "Học Vị",
+            prof_md_phd: "GS. Bác sĩ Y khoa, Tiến sĩ",
+            aprof_md_phd: "PGS. Bác sĩ Y khoa, Tiến sĩ",
+            dr_md_phd: "TS. Bác sĩ Y khoa, Tiến sĩ",
+            dr_md: "Bác sĩ Y khoa",
+            dr: "Bác sĩ",
+            prof: "Giáo sư",
+            md: "Bác sĩ Y khoa",
+            phd: "Tiến sĩ",
+            other: "Khác"
+        },
+        form: {
+            nationality: "Quốc tịch",
+            firstName: "Tên",
+            middleName: "Tên đệm",
+            lastName: "Họ",
+            dob: "Ngày sinh",
+            institution: "Cơ quan",
+            email: "Email",
+            phone: "Số điện thoại",
+            sponsor: {
+                title: "Người bảo trợ",
+                subtitle: "Nếu có người bảo trợ, vui lòng nhập tên",
+                placeholder: "Nhập tên người bảo trợ"
+            },
+            submit: "Gửi đăng ký",
+            processing: "Đang xử lý...",
+            success: "Đăng ký thành công! Đang chuyển hướng đến trang thanh toán...",
+            error: "Đăng ký thất bại. Vui lòng thử lại.",
+            required: "Trường bắt buộc"
+        },
+        validation: {
+            category: "Vui lòng chọn loại đăng ký",
+            doctorate: "Vui lòng chọn học vị",
+            firstName: "Tên phải từ 2-50 ký tự",
+            lastName: "Họ phải từ 2-50 ký tự",
+            dob: "Vui lòng chọn ngày sinh",
+            institution: "Vui lòng nhập tên cơ quan",
+            email: "Vui lòng nhập email hợp lệ",
+            phone: "Vui lòng nhập số điện thoại hợp lệ",
+            nationality: "Vui lòng nhập quốc tịch",
+            middleName: "Vui lòng nhập tên đệm"
+        },
+        checkout: {
+            title: "Thông tin đăng ký",
+            subtitle: "Chi tiết đăng ký đầy đủ",
+            registrationId: "Mã đăng ký",
+            paymentStatus: "Trạng thái thanh toán",
+            paymentSuccess: "Thanh toán thành công",
+            paymentFailed: "Thanh toán thất bại",
+            noInfo: "Không tìm thấy thông tin đăng ký",
+            loading: "Đang tải thông tin đăng ký...",
+            error: "Không thể tải thông tin đăng ký"
+        }
+    },
+    fees: {
+        title: "Chi phí tham dự",
+        early: {
+            title: "Đăng ký sớm",
+            subtitle: "Đến 31/03/2025"
+        },
+        standard: {
+            title: "Đăng ký thường",
+            subtitle: "01/04 - 31/05/2025"
+        },
+        onsite: {
+            title: "Đăng ký tại chỗ",
+            subtitle: "Sau 01/06/2025"
+        },
+        delegate: "Đại biểu tham dự",
+        accommodation: "Nội trú",
+        gala: "Gala Dinner",
+        note: "Tất cả phí được tính bằng đồng Việt Nam (VND)",
+        usd: "Phí (USD)",
+        vnd: "Phí (VND)",
+        status: {
+            success: "Thành công",
+            failed: "Thất bại"
+        }
+    }
+};
+
+// Create i18n instance
+const i18nInstance = i18n.createInstance();
+
+// Initialize i18next
+i18nInstance
+    .use(initReactI18next)
+    .init({
+        resources: {
+            en: { translation: enTranslations },
+            vi: { translation: viTranslations }
+        },
+        lng: 'vi', // default language
+        fallbackLng: 'vi',
+        interpolation: {
+            escapeValue: false
+        },
+        react: {
+            useSuspense: false // This is important for client-side rendering
+        }
+    });
+
+export default i18nInstance; 

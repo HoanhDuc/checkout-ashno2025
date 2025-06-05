@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --background: #2b2b2b;
+}
+@theme {
+    --color-background: var(--background);
+}
+.bg-header {
+  background: linear-gradient(90deg, #04122a 0%, #000e9e, #843d89 100%);
+}
+body {
+  background-color: #f0f0f0;
+}
+nextjs-portal {
+  display: none !important;
+}
+ [role="option"]:focus,
+   [role="option"]:active {
+     outline: none !important;
+     box-shadow: none !important;
+   }
