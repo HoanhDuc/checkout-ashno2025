@@ -492,7 +492,7 @@ function RegistrationForm() {
                   isInvalid={!!errors.dob}
                   maxValue={today(getLocalTimeZone()) as any}
                   showMonthAndYearPickers={true}
-                  onChange={(date) =>
+                  onChange={(date: any) =>
                     handleChange("dob", date?.toString() ?? "")
                   }
                 />
