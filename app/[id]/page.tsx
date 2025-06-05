@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { checkoutService, RegistrationInfoResponse } from "../api/checkout";
 
 import i18n from "@/app/i18n";
+import { Spinner } from "@heroui/react";
 
 export default function CheckoutInfoPage({ params }: any) {
   const { t } = useTranslation();
@@ -169,8 +170,7 @@ export default function CheckoutInfoPage({ params }: any) {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500" />
-        <span className="ml-4">{t("registration.checkout.loading")}</span>
+        <Spinner size="lg" />
       </div>
     );
   }

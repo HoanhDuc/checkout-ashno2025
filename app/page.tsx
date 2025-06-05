@@ -1,7 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import i18n from "@/app/i18n";
-
 import {
   Input,
   Select,
@@ -9,19 +7,25 @@ import {
   Button,
   DatePicker,
   Spinner,
-  addToast,
+  Autocomplete,
+  AutocompleteItem,
 } from "@heroui/react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
 import { getLocalTimeZone, today } from "@internationalized/date";
+import { countries } from "countries-list";
 
-import { checkoutService } from "@/app/api/checkout";
+import i18n from "@/app/i18n";
+import {
+  checkoutService,
+  RegistrationOptionResponse,
+} from "@/app/api/checkout";
 
 const registrationCategories = [
   { label: "registration.categories.ent", value: "ENT Doctors" },
   { label: "registration.categories.student", value: "Student & Trainees" },
-  { label: "registration.categories.chairman", value: "Chairman & Speaker" },
+  // { label: "registration.categories.chairman", value: "Chairman & Speaker" },
 ];
 
 const doctorateDegrees = [
@@ -31,6 +35,14 @@ const doctorateDegrees = [
   { label: "registration.doctorate.dr_md", value: "dr_md" },
   { label: "registration.doctorate.dr", value: "dr" },
 ];
+
+const countryOptions = Object.entries(countries)
+  .map(([code, country]) => ({
+    label: country.name,
+    key: code.toUpperCase(),
+    description: `Country code: ${code.toUpperCase()}`,
+  }))
+  .sort((a, b) => a.label.localeCompare(b.label));
 
 const initialState = {
   category: "",
@@ -44,6 +56,7 @@ const initialState = {
   email: "",
   phone: "",
   sponsor: "",
+  attendGalaDinner: true,
 };
 
 interface ValidationRule {
@@ -60,12 +73,12 @@ const validationRules: Record<keyof typeof initialState, ValidationRule> = {
   doctorate: { required: true, message: "registration.validation.doctorate" },
   firstName: {
     required: true,
-    pattern: /^[A-Za-z\s]{2,50}$/,
+    pattern: /^[A-Za-zÀ-ỹ\s]{2,50}$/,
     message: "registration.validation.firstName",
   },
   lastName: {
     required: true,
-    pattern: /^[A-Za-z\s]{2,50}$/,
+    pattern: /^[A-Za-zÀ-ỹ\s]{2,50}$/,
     message: "registration.validation.lastName",
   },
   dob: { required: true, message: "registration.validation.dob" },
@@ -89,6 +102,70 @@ const validationRules: Record<keyof typeof initialState, ValidationRule> = {
   },
   middleName: { required: false, message: "" },
   sponsor: { required: false, message: "" },
+  attendGalaDinner: { required: false, message: "" },
+};
+
+// Add custom switch component
+const CustomSwitch = ({
+  checked,
+  onChange,
+}: {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+}) => {
+  return (
+    <label aria-label="Toggle Gala Dinner attendance" className="switch">
+      <input
+        aria-label="Gala Dinner attendance"
+        checked={checked}
+        type="checkbox"
+        onChange={(e) => onChange(e.target.checked)}
+      />
+      <span className="slider" />
+      <span className="hand left">
+        <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
+          <path
+            d="M0 9H13V15C13 15.2761 12.7761 15.5 12.5 15.5H0V9Z"
+            fill="#3B82F6"
+          />
+          <path
+            d="M13.5 9H21C21.5523 9 22 9.44772 22 10V15C22 15.5523 21.5523 16 21 16H17.5C15.2909 16 13.5 14.2091 13.5 12V9Z"
+            fill="#FED5CD"
+          />
+          <path
+            d="M13 9H15V14.5C15 14.7761 14.7761 15 14.5 15H13V9Z"
+            fill="#ffffff"
+          />
+          <path
+            className="thumb"
+            d="M23.25 9.19999H15V14.2C16.933 14.2 18.5 12.633 18.5 10.7L22.25 10.7C22.9403 10.7 23.5 10.1404 23.5 9.44999C23.5 9.31192 23.3881 9.19999 23.25 9.19999Z"
+            fill="#FDE3D9"
+          />
+        </svg>
+      </span>
+      <span className="hand right">
+        <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
+          <path
+            d="M24 9H11V15C11 15.2761 11.2239 15.5 11.5 15.5H24V9Z"
+            fill="#3B82F6"
+          />
+          <path
+            d="M10.5 9H3C2.44772 9 2 9.44772 2 10V15C2 15.5523 2.44772 16 3 16H6.5C8.70914 16 10.5 14.2091 10.5 12V9Z"
+            fill="#FED5CD"
+          />
+          <path
+            d="M11 9H9V14.5C9 14.7761 9.22386 15 9.5 15H11V9Z"
+            fill="#ffffff"
+          />
+          <path
+            className="thumb"
+            d="M0.750003 9.19999H9V14.2C7.067 14.2 5.5 12.633 5.5 10.7L1.75002 10.7C1.05965 10.7 0.5 10.1404 0.5 9.44999C0.5 9.31192 0.61193 9.19999 0.750003 9.19999Z"
+            fill="#FDE3D9"
+          />
+        </svg>
+      </span>
+    </label>
+  );
 };
 
 function RegistrationForm() {
@@ -97,15 +174,49 @@ function RegistrationForm() {
   const [errors, setErrors] = useState<any>({});
   const [touched, setTouched] = useState<any>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [priceInfo, setPriceInfo] = useState<RegistrationOptionResponse | null>(
+    null
+  );
+  const [isLoadingPrice, setIsLoadingPrice] = useState(false);
 
-  const validateField = (name: string, value: string) => {
+  // Add useEffect to fetch price when category or gala dinner changes
+  useEffect(() => {
+    const fetchPrice = async () => {
+      if (!form.category) return;
+
+      setIsLoadingPrice(true);
+      try {
+        const response = await checkoutService.getRegistrationOption(
+          form.category,
+          form.attendGalaDinner
+        );
+
+        if (response?.fee_vnd) {
+          setPriceInfo(response);
+        }
+      } catch (error) {
+        console.error("Failed to fetch price:", error);
+      } finally {
+        setIsLoadingPrice(false);
+      }
+    };
+
+    fetchPrice();
+  }, [form.category, form.attendGalaDinner]);
+
+  const validateField = (name: string, value: string | boolean) => {
     const rules = validationRules[name as keyof typeof validationRules];
 
     if (!rules) return "";
 
-    if (rules.required && !value.trim()) return t(rules.message);
-    if (rules.pattern && value && !rules.pattern.test(value))
+    if (rules.required && typeof value === "string" && !value.trim())
+      return t(rules.message);
+    if (
+      rules.pattern &&
+      typeof value === "string" &&
+      value &&
+      !rules.pattern.test(value)
+    )
       return t(rules.message);
 
     return "";
@@ -124,11 +235,14 @@ function RegistrationForm() {
 
     Object.keys(validationRules).forEach((field) => {
       const value = form[field as keyof typeof form];
-      const error = validateField(field, value);
 
-      if (error) {
-        newErrors[field] = error;
-        hasErrors = true;
+      if (typeof value === "string") {
+        const error = validateField(field, value);
+
+        if (error) {
+          newErrors[field] = error;
+          hasErrors = true;
+        }
       }
     });
 
@@ -138,11 +252,6 @@ function RegistrationForm() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    addToast({
-      title: t("registration.form.error"),
-      description: "123",
-      color: "danger",
-    });
     e.preventDefault();
     const isValid = validate();
 
@@ -152,7 +261,7 @@ function RegistrationForm() {
         const registrationData = {
           registration_category: form.category,
           registration_option: form.category,
-          nationality: form.nationality,
+          nationality: form.nationality.toLowerCase(),
           doctorate_degree: form.doctorate,
           first_name: form.firstName,
           middle_name: form.middleName,
@@ -162,34 +271,24 @@ function RegistrationForm() {
           email: form.email,
           phone_number: form.phone,
           sponsor: form.sponsor,
-          attend_gala_dinner: true,
-          registration_type: "Doctor",
+          attend_gala_dinner: form.attendGalaDinner,
         };
 
         const response = await checkoutService.register(registrationData);
 
         if (response?.payment_url) {
-          const url = new URL(response.payment_url);
-
-          window.location.href = url.href;
+          window.location.href = response.payment_url;
         }
-        setSubmitted(true);
-        setForm(initialState);
         setErrors({});
         setTouched({});
       } catch (error: any) {
-        const errorMessage =
-          error.response?.data?.message || t("registration.form.error");
-
         setErrors((prev: any) => ({
           ...prev,
-          submit: errorMessage,
+          submit: {
+            title: t("registration.form.apiError.title"),
+            description: t("registration.form.apiError.description"),
+          },
         }));
-        addToast({
-          title: t("registration.form.error"),
-          description: errorMessage,
-          color: "danger",
-        });
       } finally {
         setIsSubmitting(false);
       }
@@ -202,12 +301,12 @@ function RegistrationForm() {
     }
   };
 
-  const handleChange = (field: string, value: string) => {
+  const handleChange = (field: string, value: string | boolean) => {
     setForm((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors((prev: any) => ({ ...prev, [field]: undefined }));
     }
-    if (touched[field]) {
+    if (touched[field] && typeof value === "string") {
       const error = validateField(field, value);
 
       setErrors((prev: any) => ({ ...prev, [field]: error }));
@@ -217,11 +316,11 @@ function RegistrationForm() {
   return (
     <motion.div className="pb-16 ">
       <Image
-        src="/DANG-KY-THAM-DU-VN.png"
         alt="logo"
-        width={1000}
-        height={400}
         className="absolute top-20 left-0 mb-10 h-[200px] lg:h-[400px] w-screen mx-0 object-cover"
+        height={400}
+        src="/DANG-KY-THAM-DU-VN.png"
+        width={1000}
       />
 
       <div className="mt-[230px] lg:mt-[430px] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -389,15 +488,23 @@ function RegistrationForm() {
                   {t("registration.form.nationality")}{" "}
                   <span className="text-red-500">*</span>
                 </label>
-                <Input
-                  required
+                <Autocomplete
                   className="mt-1"
+                  defaultItems={countryOptions}
                   id="nationality"
                   isInvalid={!!errors.nationality}
                   placeholder={t("registration.form.nationality")}
-                  value={form.nationality}
-                  onChange={(e) => handleChange("nationality", e.target.value)}
-                />
+                  selectedKey={form.nationality}
+                  onSelectionChange={(key) =>
+                    handleChange("nationality", key as string)
+                  }
+                >
+                  {(country) => (
+                    <AutocompleteItem key={country.key}>
+                      {country.label}
+                    </AutocompleteItem>
+                  )}
+                </Autocomplete>
                 {errors.nationality && (
                   <div className="text-xs text-red-500 mt-1">
                     {t(errors.nationality)}
@@ -581,32 +688,112 @@ function RegistrationForm() {
               </span>
             </div>
 
-            <div className="flex justify-end gap-2">
-              {errors.submit && (
-                <motion.div
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-red-500 text-lg font-medium bg-red-500/10 px-4 py-2 rounded-xl flex items-center gap-2"
-                  initial={{ opacity: 0, y: -10 }}
+            <div className="flex items-center justify-between p-4 bg-[#f4f4f5] rounded-xl">
+              <div>
+                <label
+                  className="font-medium text-gray-700"
+                  htmlFor="galaDinner"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="size-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
-                    />
-                  </svg>
-                  {errors.submit}
-                </motion.div>
-              )}
+                  {t("registration.form.gala.title")}
+                </label>
+                <p className="hidden md:block text-sm text-gray-500 mt-1">
+                  {t("registration.form.gala.subtitle")}
+                </p>
+              </div>
+              <CustomSwitch
+                checked={form.attendGalaDinner}
+                onChange={(value) => handleChange("attendGalaDinner", value)}
+              />
+            </div>
+
+            {/* Total Fee Display with enhanced shadow - Always visible */}
+            {form.category && (
+              <div className="mb-6 bg-[#f4f4f5] rounded-xl p-4 transition-shadow duration-300">
+                <div className="flex flex-col space-y-2">
+                  <div className="flex justify-between md:items-center">
+                    <span className="text-gray-900 font-medium">
+                      {t("registration.total.title")}
+                    </span>
+                    {isLoadingPrice && form.category ? (
+                      <div className="flex items-center">
+                        <Spinner size="sm" />
+                        <span className="ml-2 text-gray-700 text-sm">
+                          {t("registration.price.loading")}
+                        </span>
+                      </div>
+                    ) : priceInfo ? (
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-[#1A569F]">
+                          {priceInfo.fee_vnd.toLocaleString("vi-VN")} VNĐ
+                        </div>
+                        <div className="text-sm text-gray-700">
+                          {priceInfo.category}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-gray-400">
+                          {!form.category
+                            ? t("registration.total.free")
+                            : "0 VNĐ"}
+                        </div>
+                        <div className="text-sm text-gray-400">
+                          {t("registration.price.select_category")}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  {priceInfo && (
+                    <div className="text-sm text-gray-700 border-t border-gray-300 pt-3 mt-2">
+                      {t("registration.total.includes")}
+                      <ul className="list-disc list-inside mt-1 space-y-1">
+                        <li>{t("registration.total.conference")}</li>
+                        {form.attendGalaDinner && (
+                          <li>{t("registration.total.gala")}</li>
+                        )}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+            {errors.submit && (
+              <motion.div
+                animate={{ opacity: 1, y: 0 }}
+                className="flex-1 bg-red-50 border border-red-200 rounded-xl p-4"
+                initial={{ opacity: 0, y: -10 }}
+              >
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0">
+                    <svg
+                      className="w-6 h-6 text-red-500"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={1.5}
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-red-800 font-medium">
+                      {errors.submit.title}
+                    </h3>
+                    <p className="mt-1 text-sm text-red-700">
+                      {errors.submit.description}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+            <div className="flex justify-end gap-2">
               <Button
-                className="bg-gradient-to-r from-blue-200 to-indigo-100 text-gray-800 w-[200px] h-12 text-md font-medium transition-all duration-200 hover:opacity-90 disabled:opacity-50"
+                className="bg-gradient-to-r from-blue-200 to-indigo-100 text-[#1A569F] min-w-[200px] h-12 text-md font-medium transition-all duration-200 hover:opacity-90 disabled:opacity-50"
                 disabled={isSubmitting}
                 type="submit"
               >
@@ -619,17 +806,17 @@ function RegistrationForm() {
                   <div className="flex items-center gap-2">
                     {t("registration.form.submit")}
                     <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2}
-                      stroke="currentColor"
                       className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
+                        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
                       />
                     </svg>
                   </div>

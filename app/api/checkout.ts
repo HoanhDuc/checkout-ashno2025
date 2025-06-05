@@ -48,6 +48,17 @@ export interface RegistrationInfoResponse {
     payment_status: string;
 }
 
+export interface RegistrationOptionResponse {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    category: string;
+    subtype: string;
+    fee_usd: number;
+    fee_vnd: number;
+    active: boolean;
+}
+
 export const checkoutService = {
     async register(body: RegistrationRequestBody): Promise<{
         payment_url: string;
@@ -70,6 +81,17 @@ export const checkoutService = {
             return response.data;
         } catch (error) {
             console.error("Get registration info failed:", error);
+            throw error;
+        }
+    },
+    async getRegistrationOption(registrationOption: string, attendGalaDinner: boolean): Promise<RegistrationOptionResponse> {
+        try {
+            const response = await axiosInstance.get(
+                `/register/option?registration_option=${encodeURIComponent(registrationOption)}&attend_gala_dinner=${attendGalaDinner}`
+            );
+            return response.data;
+        } catch (error) {
+            console.error("Get registration option failed:", error);
             throw error;
         }
     },

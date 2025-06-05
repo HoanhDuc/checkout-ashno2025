@@ -38,10 +38,18 @@ const enTranslations = {
                 subtitle: "If you have a sponsor, please enter their name",
                 placeholder: "Enter sponsor name"
             },
-            submit: "Submit Registration",
+            gala: {
+                title: "Gala Dinner",
+                subtitle: "Join us for the special gala dinner event (1,000,000 VND)"
+            },
+            submit: "Go to payment",
             processing: "Processing...",
             success: "Registration successful! Redirecting to payment...",
             error: "Registration failed. Please try again.",
+            apiError: {
+                title: "Error occurred!",
+                description: "Please check your personal information. Each person is only allowed to register once."
+            },
             required: "Required field"
         },
         validation: {
@@ -66,6 +74,23 @@ const enTranslations = {
             noInfo: "No registration information found",
             loading: "Loading registration information...",
             error: "Failed to load registration information"
+        },
+        price: {
+            title: "Registration Fee",
+            loading: "Loading price information...",
+            subtype: "Registration Type",
+            select_category: "Please select a registration category",
+            error: {
+                title: "Error Loading Price",
+                description: "Failed to load price information. Please try again."
+            }
+        },
+        total: {
+            title: "Total Registration Fee",
+            includes: "Fee includes:",
+            conference: "Conference registration",
+            gala: "Gala dinner",
+            free: "Free"
         }
     },
     fees: {
@@ -131,10 +156,18 @@ const viTranslations = {
                 subtitle: "Nếu có người bảo trợ, vui lòng nhập tên",
                 placeholder: "Nhập tên người bảo trợ"
             },
-            submit: "Gửi đăng ký",
+            gala: {
+                title: "Gala Dinner",
+                subtitle: "Tham gia bữa tiệc gala đặc biệt (1.000.000 VND)"
+            },
+            submit: "Thanh toán",
             processing: "Đang xử lý...",
             success: "Đăng ký thành công! Đang chuyển hướng đến trang thanh toán...",
             error: "Đăng ký thất bại. Vui lòng thử lại.",
+            apiError: {
+                title: "Có lỗi xảy ra!",
+                description: "Hãy kiểm tra lại thông tin cá nhân. Mỗi người chỉ được phép đăng kí 1 lần"
+            },
             required: "Trường bắt buộc"
         },
         validation: {
@@ -159,6 +192,23 @@ const viTranslations = {
             noInfo: "Không tìm thấy thông tin đăng ký",
             loading: "Đang tải thông tin đăng ký...",
             error: "Không thể tải thông tin đăng ký"
+        },
+        price: {
+            title: "Phí đăng ký",
+            loading: "Đang tải thông tin giá...",
+            subtype: "Loại đăng ký",
+            select_category: "Vui lòng chọn loại đăng ký",
+            error: {
+                title: "Lỗi tải giá",
+                description: "Không thể tải thông tin giá. Vui lòng thử lại."
+            }
+        },
+        total: {
+            title: "Tổng phí đăng ký",
+            includes: "Phí bao gồm:",
+            conference: "Phí tham dự hội nghị",
+            gala: "Phí tham dự gala dinner",
+            free: "Miễn phí"
         }
     },
     fees: {
