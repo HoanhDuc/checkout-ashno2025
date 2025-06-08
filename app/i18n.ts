@@ -7,9 +7,9 @@ const enTranslations = {
         title: "Registration Form",
         subtitle: "Please fill in all required fields",
         categories: {
-            title: "Registration Category",
+            title: "Academic  titles and degrees",
             ent: "ENT Doctors",
-            student: "Student & Trainees",
+            student: "Resident & Trainee",
             chairman: "Chairman & Speaker"
         },
         doctorate: {
@@ -40,7 +40,7 @@ const enTranslations = {
             },
             gala: {
                 title: "Gala Dinner",
-                subtitle: "Join us for the special gala dinner event (1,000,000 VND)"
+                subtitle: "Join us for the special gala dinner event (100 USD)"
             },
             submit: "Go to payment",
             processing: "Processing...",
@@ -88,7 +88,7 @@ const enTranslations = {
         total: {
             title: "Total Registration Fee",
             includes: "Fee includes:",
-            conference: "Conference registration",
+            conference: "Conference registration fee",
             gala: "Gala dinner",
             free: "Free"
         }
@@ -97,22 +97,30 @@ const enTranslations = {
         title: "Registration Fee",
         early: {
             title: "Early Bird",
-            subtitle: "Until March 31, 2025"
+            subtitle: "Until March 31, 2025",
+            price: "500 USD"
         },
         standard: {
             title: "Standard",
-            subtitle: "April 1 - May 31, 2025"
+            subtitle: "April 1 - May 31, 2025",
+            price: "600 USD"
         },
         onsite: {
             title: "On-site",
-            subtitle: "After June 1, 2025"
+            subtitle: "After June 1, 2025",
+            price: "700 USD"
         },
         delegate: "Doctor",
-        accommodation: "Student & Trainer",
-        gala: "Gala Dinner",
-        note: "All fees are in Vietnamese Dong (VND)",
-        usd: "Fee (USD)",
-        vnd: "Fee (VND)",
+        accommodation: {
+            title: "Resident & Trainee",
+            price: "300 USD"
+
+        },
+        gala: {
+            title: "Gala Dinner",
+            price: "100 USD"
+        },
+        note: "All fees are in USD",
         status: {
             success: "Success",
             failed: "Failed"
@@ -127,15 +135,15 @@ const viTranslations = {
         categories: {
             title: "Loại Đăng Ký",
             ent: "Bác sĩ Tai Mũi Họng",
-            student: "Sinh viên & Học viên",
+            student: "Bác sĩ nội trú",
             chairman: "Chủ tịch & Giảng viên"
         },
         doctorate: {
             title: "Học Vị",
-            prof_md_phd: "GS. Bác sĩ Y khoa, Tiến sĩ",
-            aprof_md_phd: "PGS. Bác sĩ Y khoa, Tiến sĩ",
-            dr_md_phd: "TS. Bác sĩ Y khoa, Tiến sĩ",
-            dr_md: "Bác sĩ Y khoa",
+            prof_md_phd: "GS.TS. Bác sĩ",
+            aprof_md_phd: "PGS.TS Bác sĩ",
+            dr_md_phd: "TS. Bác sĩ",
+            dr_md: "Bác sĩ",
             dr: "Bác sĩ",
             prof: "Giáo sư",
             md: "Bác sĩ Y khoa",
@@ -215,22 +223,29 @@ const viTranslations = {
         title: "Chi phí tham dự",
         early: {
             title: "Đăng ký sớm",
-            subtitle: "Đến 31/03/2025"
+            subtitle: "Đến 31/03/2025",
+            price: "1.800.000 VND"
         },
         standard: {
             title: "Đăng ký thường",
-            subtitle: "01/04 - 31/05/2025"
+            subtitle: "01/04 - 31/05/2025",
+            price: "2.200.000 VND"
         },
         onsite: {
             title: "Đăng ký tại chỗ",
-            subtitle: "Sau 01/06/2025"
+            subtitle: "Sau 01/06/2025",
+            price: "3.000.000 VND"
         },
         delegate: "Đại biểu tham dự",
-        accommodation: "Nội trú",
-        gala: "Gala Dinner",
+        accommodation: {
+            title: "Nội trú",
+            price: "1.500.000 VND"
+        },
+        gala: {
+            title: "Gala Dinner",
+            price: "1.000.000 VND"
+        },
         note: "Tất cả phí được tính bằng đồng Việt Nam (VND)",
-        usd: "Phí (USD)",
-        vnd: "Phí (VND)",
         status: {
             success: "Thành công",
             failed: "Thất bại"

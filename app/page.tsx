@@ -29,11 +29,22 @@ const registrationCategories = [
 ];
 
 const doctorateDegrees = [
-  { label: "registration.doctorate.prof_md_phd", value: "prof_md_phd" },
-  { label: "registration.doctorate.aprof_md_phd", value: "aprof_md_phd" },
-  { label: "registration.doctorate.dr_md_phd", value: "dr_md_phd" },
-  { label: "registration.doctorate.dr_md", value: "dr_md" },
-  { label: "registration.doctorate.dr", value: "dr" },
+  {
+    label: "registration.doctorate.prof_md_phd",
+    value: "registration.doctorate.prof_md_phd",
+  },
+  {
+    label: "registration.doctorate.aprof_md_phd",
+    value: "registration.doctorate.aprof_md_phd",
+  },
+  {
+    label: "registration.doctorate.dr_md_phd",
+    value: "registration.doctorate.dr_md_phd",
+  },
+  {
+    label: "registration.doctorate.dr_md",
+    value: "registration.doctorate.dr_md",
+  },
 ];
 
 const countryOptions = Object.entries(countries)
@@ -374,7 +385,7 @@ function RegistrationForm() {
                       {t("fees.early.title")}
                     </div>
                     <span className="text-sm inline-block px-4 py-2 bg-indigo-50 text-indigo-700 rounded-lg font-medium w-full md:w-auto">
-                      1.800.000 VNĐ
+                      {t("fees.early.price")}
                     </span>
                   </div>
                   <div className="text-center md:border-r md:border-gray-200 md:px-4 mb-3 md:mb-0">
@@ -382,7 +393,7 @@ function RegistrationForm() {
                       {t("fees.standard.title")}
                     </div>
                     <span className="text-sm inline-block px-4 py-2 bg-indigo-50 text-indigo-700 rounded-lg font-medium w-full md:w-auto">
-                      2.200.000 VNĐ
+                      {t("fees.standard.price")}
                     </span>
                   </div>
                   <div className="text-center md:px-4">
@@ -390,7 +401,7 @@ function RegistrationForm() {
                       {t("fees.onsite.title")}
                     </div>
                     <span className="text-sm inline-block px-4 py-2 bg-indigo-50 text-indigo-700 rounded-lg font-medium w-full md:w-auto">
-                      3.000.000 VNĐ
+                      {t("fees.onsite.price")}
                     </span>
                   </div>
                 </div>
@@ -399,11 +410,11 @@ function RegistrationForm() {
               {/* Accommodation Row */}
               <div className="md:grid md:grid-cols-4 p-4 transition-colors duration-200 items-center">
                 <div className="font-medium text-gray-800 md:border-r md:border-gray-200 md:pr-4 mb-3 md:mb-0">
-                  {t("fees.accommodation")}
+                  {t("fees.accommodation.title")}
                 </div>
                 <div className="col-span-3 text-center px-4">
                   <span className="text-sm inline-block px-6 py-2 bg-indigo-50 text-indigo-700 rounded-lg font-medium w-full md:w-auto">
-                    1.500.000 VNĐ
+                    {t("fees.accommodation.price")}
                   </span>
                 </div>
               </div>
@@ -411,11 +422,11 @@ function RegistrationForm() {
               {/* Gala Row */}
               <div className="md:grid md:grid-cols-4 p-4 transition-colors duration-200 items-center">
                 <div className="font-medium text-gray-800 md:border-r md:border-gray-200 md:pr-4 mb-3 md:mb-0">
-                  {t("fees.gala")}
+                  {t("fees.gala.title")}
                 </div>
                 <div className="col-span-3 text-center px-4">
                   <span className="text-sm inline-block px-6 py-2 bg-indigo-50 text-indigo-700 rounded-lg font-medium w-full md:w-auto">
-                    1.000.000 VNĐ
+                    {t("fees.gala.price")}
                   </span>
                 </div>
               </div>
@@ -452,7 +463,7 @@ function RegistrationForm() {
                   htmlFor="category"
                 >
                   {t("registration.categories.title")}{" "}
-                  <span className="text-red-500">*</span>
+                  <span className="text-red-500"> *</span>
                 </label>
                 <Select
                   aria-invalid={!!errors.category && touched.category}
@@ -486,7 +497,7 @@ function RegistrationForm() {
               <div>
                 <label className="font-medium" htmlFor="nationality">
                   {t("registration.form.nationality")}{" "}
-                  <span className="text-red-500">*</span>
+                  <span className="text-red-500"> *</span>
                 </label>
                 <Autocomplete
                   className="mt-1"
@@ -511,18 +522,17 @@ function RegistrationForm() {
                   </div>
                 )}
               </div>
-
               <div>
                 <label className="font-medium" htmlFor="doctorate">
                   {t("registration.doctorate.title")}{" "}
-                  <span className="text-red-500">*</span>
+                  <span className="text-red-500"> *</span>
                 </label>
                 <Select
                   className="mt-1"
                   id="doctorate"
                   isInvalid={!!errors.doctorate}
                   placeholder={t("registration.doctorate.title")}
-                  onChange={(e) => handleChange("doctorate", e.target.value)}
+                  onChange={(e) => handleChange("doctorate", t(e.target.value))}
                 >
                   {doctorateDegrees.map((deg) => (
                     <SelectItem key={deg.value}>{t(deg.label)}</SelectItem>
@@ -540,6 +550,7 @@ function RegistrationForm() {
               <div>
                 <label className="font-medium" htmlFor="firstName">
                   {t("registration.form.firstName")}
+                  <span className="text-red-500"> *</span>
                 </label>
                 <Input
                   className="mt-1"
@@ -572,6 +583,7 @@ function RegistrationForm() {
               <div>
                 <label className="font-medium" htmlFor="lastName">
                   {t("registration.form.lastName")}
+                  <span className="text-red-500"> *</span>
                 </label>
                 <Input
                   className="mt-1"
@@ -593,6 +605,7 @@ function RegistrationForm() {
               <div>
                 <label className="font-medium" htmlFor="dob">
                   {t("registration.form.dob")}
+                  <span className="text-red-500"> *</span>
                 </label>
                 <DatePicker
                   className="mt-1 w-full"
@@ -613,6 +626,7 @@ function RegistrationForm() {
               <div>
                 <label className="font-medium" htmlFor="institution">
                   {t("registration.form.institution")}
+                  <span className="text-red-500"> *</span>
                 </label>
                 <Input
                   className="mt-1"
@@ -634,6 +648,7 @@ function RegistrationForm() {
               <div>
                 <label className="font-medium" htmlFor="email">
                   {t("registration.form.email")}
+                  <span className="text-red-500"> *</span>
                 </label>
                 <Input
                   className="mt-1"
@@ -654,6 +669,7 @@ function RegistrationForm() {
               <div>
                 <label className="font-medium" htmlFor="phone">
                   {t("registration.form.phone")}
+                  <span className="text-red-500"> *</span>
                 </label>
                 <Input
                   className="mt-1"
@@ -724,18 +740,20 @@ function RegistrationForm() {
                     ) : priceInfo ? (
                       <div className="text-right">
                         <div className="text-2xl font-bold text-[#1A569F]">
-                          {priceInfo.fee_vnd.toLocaleString("vi-VN")} VNĐ
+                          {i18n?.language === "vi"
+                            ? `${priceInfo.fee_vnd.toLocaleString("vi-VN")} VND`
+                            : `${priceInfo.fee_usd.toLocaleString("en-US")} USD`}
                         </div>
                         <div className="text-sm text-gray-700">
-                          {priceInfo.category}
+                          {t("registration.total.conference")}
+                          {form.attendGalaDinner &&
+                            ` + ${t("fees.gala.title")}`}
                         </div>
                       </div>
                     ) : (
                       <div className="text-right">
                         <div className="text-2xl font-bold text-gray-400">
-                          {!form.category
-                            ? t("registration.total.free")
-                            : "0 VNĐ"}
+                          {!form.category ? t("registration.total.free") : "0"}
                         </div>
                         <div className="text-sm text-gray-400">
                           {t("registration.price.select_category")}
@@ -743,7 +761,7 @@ function RegistrationForm() {
                       </div>
                     )}
                   </div>
-                  {priceInfo && (
+                  {/* {priceInfo && (
                     <div className="text-sm text-gray-700 border-t border-gray-300 pt-3 mt-2">
                       {t("registration.total.includes")}
                       <ul className="list-disc list-inside mt-1 space-y-1">
@@ -753,7 +771,7 @@ function RegistrationForm() {
                         )}
                       </ul>
                     </div>
-                  )}
+                  )} */}
                 </div>
               </div>
             )}
