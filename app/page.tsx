@@ -330,7 +330,11 @@ function RegistrationForm() {
         alt="logo"
         className="absolute top-20 left-0 mb-10 h-[200px] lg:h-[400px] w-screen mx-0 object-cover"
         height={400}
-        src="/DANG-KY-THAM-DU-VN.png"
+        src={
+          i18n.language === "vi"
+            ? "/DANG-KY-THAM-DU-VN.png"
+            : "/DANG-KY-THAM-DU-EN.png"
+        }
         width={1000}
       />
 
