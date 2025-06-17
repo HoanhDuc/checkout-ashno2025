@@ -4,46 +4,28 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Button } from "@heroui/react";
 import { useTranslation } from "react-i18next";
+import { setCookie, getCookie } from "cookies-next";
 
 export const Navbar = () => {
   const { i18n } = useTranslation();
-  const [currentLang, setCurrentLang] = useState<string>(
-    i18n?.language || "vi"
-  );
-
-  const getCookie = (name: string) => {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-
-    if (parts.length === 2) return parts.pop()?.split(";").shift();
-
-    return null;
-  };
-
-  const setCookie = (name: string, value: string, days: number = 365) => {
-    const expires = new Date();
-
-    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
-    console.log(`Cookie set: ${name}=${value}`);
-  };
+  const [currentLang, setCurrentLang] = useState<string>("vi");
 
   const changeLanguage = () => {
     const newLang = currentLang === "vi" ? "en" : "vi";
-
-    // Set cookie immediately
     setCookie("pll_language", newLang);
-
-    // Update state and i18n
     setCurrentLang(newLang);
     i18n?.changeLanguage(newLang);
   };
 
   useEffect(() => {
-    const lang = getCookie("pll_language") || i18n?.language || "vi";
-
-    console.log("Current language:", getCookie("pll_language"));
-    setCurrentLang(lang as string);
+    const setLang = async () => {
+      const currLang = (await getCookie("pll_language")) || "vi";
+      if (currLang) {
+        setCurrentLang(currLang);
+        i18n?.changeLanguage(currLang);
+      }
+    };
+    setLang();
   }, []);
 
   return (
@@ -55,10 +37,11 @@ export const Navbar = () => {
       {/* <ThemeSwitch /> */}
       <Image
         alt="logo"
-        className="py-2 h-[80px]"
+        className="py-2 h-[80px] cursor-pointer"
         height={100}
         src="/logo.png"
         width={200}
+        onClick={() => (window.location.href = "https://ashno2025.com")}
       />
       <Button
         className="fixed top-4 right-7 z-50 bg-white shadow-md hover:shadow-lg transition-shadow duration-200 flex items-center gap-2"

@@ -328,7 +328,7 @@ function RegistrationForm() {
     <motion.div className="pb-16">
       <Image
         alt="logo"
-        className="absolute top-20 left-0 w-screen mx-0 object-contain rounded-b-lg"
+        className="absolute min-h-[190px] top-20 left-0 w-screen mx-0 object-none lg:object-contain rounded-b-lg"
         height={1080}
         src={
           i18n.language === "vi"
