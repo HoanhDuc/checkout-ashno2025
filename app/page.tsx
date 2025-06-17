@@ -325,20 +325,20 @@ function RegistrationForm() {
   };
 
   return (
-    <motion.div className="pb-16 ">
+    <motion.div className="pb-16">
       <Image
         alt="logo"
-        className="absolute top-20 left-0 mb-10 h-[200px] lg:h-[400px] w-screen mx-0 object-cover"
-        height={400}
+        className="absolute top-20 left-0 w-screen mx-0 object-contain rounded-b-lg"
+        height={1080}
         src={
           i18n.language === "vi"
             ? "/DANG-KY-THAM-DU-VN.png"
             : "/DANG-KY-THAM-DU-EN.png"
         }
-        width={1000}
+        width={1920}
       />
 
-      <div className="mt-[230px] lg:mt-[430px] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mt-[215px] lg:mt-[320px] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Fee Table */}
         <div className="mb-10">
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
