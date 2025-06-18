@@ -9,6 +9,7 @@ import { setCookie, getCookie } from "cookies-next";
 export const Navbar = () => {
   const { i18n } = useTranslation();
   const [currentLang, setCurrentLang] = useState<string>("vi");
+  const [isVisible, setIsVisible] = useState(true);
 
   const changeLanguage = () => {
     const newLang = currentLang === "vi" ? "en" : "vi";
@@ -28,11 +29,59 @@ export const Navbar = () => {
     setLang();
   }, []);
 
+  useEffect(() => {
+    let scrollStartY = window.scrollY;
+    let isScrolling = false;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (!isScrolling) {
+        scrollStartY = currentScrollY;
+        isScrolling = true;
+      }
+
+      const scrollDistance = currentScrollY - scrollStartY;
+
+      if (currentScrollY > 64) {
+        // Hide header when scrolling down 50px from start position
+        if (scrollDistance > 50) {
+          setIsVisible(false);
+        }
+        // Show header when scrolling up 50px from start position
+        else if (scrollDistance < -50) {
+          setIsVisible(true);
+        }
+      } else {
+        // Always show header when at top
+        setIsVisible(true);
+      }
+    };
+
+    const handleScrollEnd = () => {
+      isScrolling = false;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("scrollend", handleScrollEnd, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scrollend", handleScrollEnd);
+    };
+  }, []);
+
   return (
     <HeroUINavbar
-      className="bg-header shadow-xl py-2"
+      className={`bg-header shadow-xl py-2 transition-transform duration-300 ease-in-out ${
+        isVisible ? "translate-y-0" : "-translate-y-full"
+      }`}
       maxWidth="xl"
       position="sticky"
+      style={{
+        top: 0,
+        zIndex: 1000,
+      }}
     >
       {/* <ThemeSwitch /> */}
       <Image
