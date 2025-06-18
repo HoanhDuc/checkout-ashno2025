@@ -135,7 +135,7 @@ const viTranslations = {
         categories: {
             title: "Loại Đăng Ký",
             ent: "Bác sĩ Tai Mũi Họng",
-            student: "Bác sĩ nội trú",
+            student: "Bác sĩ Nội trú",
             chairman: "Chủ tịch & Giảng viên"
         },
         doctorate: {
@@ -143,7 +143,7 @@ const viTranslations = {
             prof_md_phd: "GS.TS. Bác sĩ",
             aprof_md_phd: "PGS.TS Bác sĩ",
             dr_md_phd: "TS. Bác sĩ",
-            dr_md: "Bác sĩ",
+            dr_md: "ThS.Bác sĩ",
             dr: "Bác sĩ",
             prof: "Giáo sư",
             md: "Bác sĩ Y khoa",
@@ -238,7 +238,7 @@ const viTranslations = {
         },
         delegate: "Đại biểu tham dự",
         accommodation: {
-            title: "Nội trú",
+            title: "Bác sĩ Nội trú",
             price: "1.500.000 VND"
         },
         gala: {

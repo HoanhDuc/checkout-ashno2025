@@ -45,6 +45,14 @@ const doctorateDegrees = [
     label: "registration.doctorate.dr_md",
     value: "registration.doctorate.dr_md",
   },
+  {
+    label: "registration.doctorate.dr",
+    value: "registration.doctorate.dr",
+  },
+  {
+    label: "registration.doctorate.other",
+    value: "registration.doctorate.other",
+  },
 ];
 
 const countryOptions = Object.entries(countries)
@@ -133,48 +141,6 @@ const CustomSwitch = ({
         onChange={(e) => onChange(e.target.checked)}
       />
       <span className="slider" />
-      <span className="hand left">
-        <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
-          <path
-            d="M0 9H13V15C13 15.2761 12.7761 15.5 12.5 15.5H0V9Z"
-            fill="#3B82F6"
-          />
-          <path
-            d="M13.5 9H21C21.5523 9 22 9.44772 22 10V15C22 15.5523 21.5523 16 21 16H17.5C15.2909 16 13.5 14.2091 13.5 12V9Z"
-            fill="#FED5CD"
-          />
-          <path
-            d="M13 9H15V14.5C15 14.7761 14.7761 15 14.5 15H13V9Z"
-            fill="#ffffff"
-          />
-          <path
-            className="thumb"
-            d="M23.25 9.19999H15V14.2C16.933 14.2 18.5 12.633 18.5 10.7L22.25 10.7C22.9403 10.7 23.5 10.1404 23.5 9.44999C23.5 9.31192 23.3881 9.19999 23.25 9.19999Z"
-            fill="#FDE3D9"
-          />
-        </svg>
-      </span>
-      <span className="hand right">
-        <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
-          <path
-            d="M24 9H11V15C11 15.2761 11.2239 15.5 11.5 15.5H24V9Z"
-            fill="#3B82F6"
-          />
-          <path
-            d="M10.5 9H3C2.44772 9 2 9.44772 2 10V15C2 15.5523 2.44772 16 3 16H6.5C8.70914 16 10.5 14.2091 10.5 12V9Z"
-            fill="#FED5CD"
-          />
-          <path
-            d="M11 9H9V14.5C9 14.7761 9.22386 15 9.5 15H11V9Z"
-            fill="#ffffff"
-          />
-          <path
-            className="thumb"
-            d="M0.750003 9.19999H9V14.2C7.067 14.2 5.5 12.633 5.5 10.7L1.75002 10.7C1.05965 10.7 0.5 10.1404 0.5 9.44999C0.5 9.31192 0.61193 9.19999 0.750003 9.19999Z"
-            fill="#FDE3D9"
-          />
-        </svg>
-      </span>
     </label>
   );
 };
@@ -744,7 +710,11 @@ function RegistrationForm() {
                     ) : priceInfo ? (
                       <div className="text-right">
                         <div className="text-2xl font-bold text-[#1A569F]">
-                          {i18n?.language === "vi"
+                          {(
+                            !form.nationality
+                              ? i18n.language === "vi"
+                              : form.nationality === "VN"
+                          )
                             ? `${priceInfo.fee_vnd.toLocaleString("vi-VN")} VND`
                             : `${priceInfo.fee_usd.toLocaleString("en-US")} USD`}
                         </div>
