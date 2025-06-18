@@ -328,7 +328,7 @@ function RegistrationForm() {
     <motion.div className="pb-16">
       <Image
         alt="logo"
-        className="absolute min-h-[190px] top-20 left-0 w-screen mx-0 object-none lg:object-contain rounded-b-lg"
+        className="absolute h-[200px] lg:h-[300px] top-20 left-0 w-screen mx-0 object-cover rounded-b-lg"
         height={1080}
         src={
           i18n.language === "vi"
@@ -338,7 +338,7 @@ function RegistrationForm() {
         width={1920}
       />
 
-      <div className="mt-[215px] lg:mt-[320px] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mt-[230px] lg:mt-[330px] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Fee Table */}
         <div className="mb-10">
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
