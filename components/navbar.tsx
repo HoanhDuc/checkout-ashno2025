@@ -5,28 +5,59 @@ import { useEffect, useState } from "react";
 import { Button } from "@heroui/react";
 import { useTranslation } from "react-i18next";
 import { setCookie, getCookie } from "cookies-next";
+import { useSearchParams } from "next/navigation";
 
 export const Navbar = () => {
   const { i18n } = useTranslation();
   const [currentLang, setCurrentLang] = useState<string>("vi");
   const [isVisible, setIsVisible] = useState(true);
+  const searchParams = useSearchParams();
+
+  const updateLangParam = (lang: string) => {
+    if (typeof window === "undefined") return;
+    const url = new URL(window.location.href);
+
+    url.searchParams.set("lang", lang);
+    window.history.replaceState({}, "", url.toString());
+  };
 
   const changeLanguage = () => {
     const newLang = currentLang === "vi" ? "en" : "vi";
+
     setCookie("pll_language", newLang);
     setCurrentLang(newLang);
     i18n?.changeLanguage(newLang);
+    updateLangParam(newLang);
   };
 
   useEffect(() => {
-    const setLang = async () => {
-      const currLang = (await getCookie("pll_language")) || "vi";
-      if (currLang) {
-        setCurrentLang(currLang);
-        i18n?.changeLanguage(currLang);
-      }
-    };
-    setLang();
+    // On mount, check for lang param in URL
+    const urlLang = searchParams?.get("lang");
+    const isValidLang = urlLang === "en" || urlLang === "vi";
+
+    if (isValidLang && urlLang !== currentLang) {
+      setCurrentLang(urlLang);
+      setCookie("pll_language", urlLang);
+      i18n?.changeLanguage(urlLang);
+    } else if (!isValidLang) {
+      const setLang = async () => {
+        const storedLang = (await getCookie("pll_language")) || "en";
+        setCurrentLang(storedLang);
+        i18n?.changeLanguage(storedLang);
+        updateLangParam(storedLang);
+      };
+      setLang();
+    } else {
+      const setLang = async () => {
+        const currLang = (await getCookie("pll_language")) || "en";
+        if (currLang) {
+          setCurrentLang(currLang);
+          i18n?.changeLanguage(currLang);
+          updateLangParam(currLang);
+        }
+      };
+      setLang();
+    }
   }, []);
 
   useEffect(() => {
@@ -93,7 +124,7 @@ export const Navbar = () => {
         onClick={() => (window.location.href = "https://ashno2025.com")}
       />
       <Button
-        className="fixed top-4 right-7 z-50 bg-white shadow-md hover:shadow-lg transition-shadow duration-200 flex items-center gap-2"
+        className=" z-50 bg-white shadow-md hover:shadow-lg transition-shadow duration-200 flex items-center gap-2"
         onClick={changeLanguage}
       >
         <svg

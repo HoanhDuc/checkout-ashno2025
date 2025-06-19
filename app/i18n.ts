@@ -94,6 +94,7 @@ const enTranslations = {
         }
     },
     fees: {
+        paid: "Paid",
         title: "Registration Fee",
         early: {
             title: "Early Bird",
@@ -220,6 +221,7 @@ const viTranslations = {
         }
     },
     fees: {
+        paid: "Đã thanh toán",
         title: "Chi phí tham dự",
         early: {
             title: "Đăng ký sớm",

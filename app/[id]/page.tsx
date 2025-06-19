@@ -9,6 +9,7 @@ import { checkoutService, RegistrationInfoResponse } from "../api/checkout";
 
 import i18n from "@/app/i18n";
 import { Spinner } from "@heroui/react";
+import { countries } from "countries-list";
 
 export default function CheckoutInfoPage({ params }: any) {
   const { t } = useTranslation();
@@ -163,13 +164,21 @@ export default function CheckoutInfoPage({ params }: any) {
     );
   };
 
+  // Helper to get country name from code
+  const getCountryName = (code: string) => {
+    if (!code) return "";
+    const key = code.toUpperCase() as keyof typeof countries;
+    const country = countries[key];
+    return country ? country.name : code;
+  };
+
   if (!mounted) {
     return null;
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-[70vh] flex items-center justify-center ">
         <Spinner size="lg" />
       </div>
     );
@@ -177,13 +186,18 @@ export default function CheckoutInfoPage({ params }: any) {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
-          <div className="flex justify-center mb-4">
-            {getStatusIcon("error")}
+      <div className="min-h-[70vh] flex items-center justify-center ">
+        <div className="bg-white rounded-2xl overflow-hidden shadow-lg pt-0 text-center">
+          <div className="flex justify-between items-center  bg-blue-200 p-6 border-b border-gray-100">
+            <Image alt="logo" height={80} src="/ONEPAY.png" width={100} />
           </div>
-          <div className="text-red-500 text-xl">
-            {t("registration.checkout.error")}
+          <div className=" p-8">
+            <div className="flex justify-center mb-4">
+              {getStatusIcon("error")}
+            </div>
+            <div className="text-red-500 text-xl">
+              {t("registration.checkout.error")}
+            </div>
           </div>
         </div>
       </div>
@@ -192,7 +206,7 @@ export default function CheckoutInfoPage({ params }: any) {
 
   if (!registrationInfo) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center ">
         <div className="text-gray-500 text-xl bg-white p-8 rounded-2xl shadow-lg">
           {t("registration.checkout.noInfo")}
         </div>
@@ -203,7 +217,7 @@ export default function CheckoutInfoPage({ params }: any) {
   const isSuccess = registrationInfo.payment_status.toLowerCase() === "done";
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen  py-12 px-4 sm:px-6 lg:px-8">
       <motion.div
         animate={{ opacity: 1, y: 0 }}
         className="max-w-7xl mx-auto"
@@ -236,18 +250,18 @@ export default function CheckoutInfoPage({ params }: any) {
                 </h3>
                 <div className="bg-indigo-50 rounded-xl p-4">
                   <div className="grid grid-cols-1 gap-4">
-                    <div className="flex justify-between items-center border-b pb-4">
-                      <span className="text-gray-600">{t("fees.usd")}</span>
-                      <span className="font-medium bg-indigo-50 text-indigo-700">
-                        ${registrationInfo.RegistrationOption.fee_usd}
-                      </span>
-                    </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-600">{t("fees.vnd")}</span>
-                      <span className="font-medium bg-indigo-50 text-indigo-700">
-                        {registrationInfo.RegistrationOption.fee_vnd.toLocaleString()}{" "}
-                        VND
-                      </span>
+                      <span className="text-gray-600">{t("fees.paid")}</span>
+                      {registrationInfo.nationality.toUpperCase() === "VN" ? (
+                        <span className="font-medium bg-indigo-50 text-indigo-700">
+                          {registrationInfo.RegistrationOption.fee_vnd.toLocaleString()}{" "}
+                          VND
+                        </span>
+                      ) : (
+                        <span className="font-medium bg-indigo-50 text-indigo-700">
+                          ${registrationInfo.RegistrationOption.fee_usd}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -325,7 +339,7 @@ export default function CheckoutInfoPage({ params }: any) {
                         {t("registration.form.nationality")}
                       </span>
                       <span className="font-medium">
-                        {registrationInfo.nationality}
+                        {getCountryName(registrationInfo.nationality)}
                       </span>
                     </div>
                   </div>
