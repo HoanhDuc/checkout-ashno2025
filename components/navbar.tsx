@@ -9,7 +9,7 @@ import { useSearchParams } from "next/navigation";
 
 export const Navbar = () => {
   const { i18n } = useTranslation();
-  const [currentLang, setCurrentLang] = useState<string>("vi");
+  const [currentLang, setCurrentLang] = useState<string>("");
   const [isVisible, setIsVisible] = useState(true);
   const searchParams = useSearchParams();
 
@@ -29,36 +29,27 @@ export const Navbar = () => {
     i18n?.changeLanguage(newLang);
     updateLangParam(newLang);
   };
+  const urlLang = searchParams?.get("lang");
 
   useEffect(() => {
     // On mount, check for lang param in URL
-    const urlLang = searchParams?.get("lang");
-    const isValidLang = urlLang === "en" || urlLang === "vi";
+    const urlLang = searchParams?.get("lang")?.toString();
+    const isValidLang = ["en", "vi"].includes(urlLang as string);
+    const setLang = async () => {
+      const storedLang = (await getCookie("pll_language")) || "en";
+      setCurrentLang(storedLang);
+      i18n?.changeLanguage(storedLang);
+      updateLangParam(storedLang);
+    };
 
     if (isValidLang && urlLang !== currentLang) {
-      setCurrentLang(urlLang);
+      setCurrentLang(urlLang as string);
       setCookie("pll_language", urlLang);
       i18n?.changeLanguage(urlLang);
-    } else if (!isValidLang) {
-      const setLang = async () => {
-        const storedLang = (await getCookie("pll_language")) || "en";
-        setCurrentLang(storedLang);
-        i18n?.changeLanguage(storedLang);
-        updateLangParam(storedLang);
-      };
-      setLang();
     } else {
-      const setLang = async () => {
-        const currLang = (await getCookie("pll_language")) || "en";
-        if (currLang) {
-          setCurrentLang(currLang);
-          i18n?.changeLanguage(currLang);
-          updateLangParam(currLang);
-        }
-      };
       setLang();
     }
-  }, []);
+  }, [urlLang]);
 
   useEffect(() => {
     let scrollStartY = window.scrollY;
